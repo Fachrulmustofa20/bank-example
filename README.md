@@ -1,5 +1,3 @@
-# pretest privy
-
 ## How to setup
 - `touch .env` in terminal (copy paste from .env.example)
 ```
