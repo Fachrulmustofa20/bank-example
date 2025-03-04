@@ -1,0 +1,333 @@
+basePath: /api/
+definitions:
+  models.AddDepositRequest:
+    properties:
+      balance:
+        type: integer
+      balance_achieve:
+        type: integer
+      code:
+        type: string
+    type: object
+  models.CreateAccountBankRequest:
+    properties:
+      balance:
+        type: integer
+      balance_achieve:
+        type: integer
+      code:
+        type: string
+    type: object
+  models.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  models.RegisterRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  models.TopUpRequest:
+    properties:
+      amount:
+        type: integer
+      code:
+        type: string
+    type: object
+  models.TransferBalance:
+    properties:
+      amount:
+        type: integer
+      email_recepient:
+        type: string
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:45001
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: Document API Bank
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://fachrulmustofa.site/
+  title: Document API Bank
+  version: "1.0"
+paths:
+  /balance:
+    get:
+      consumes:
+      - application/json
+      description: Get Balance
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - JWT: []
+      summary: Get Balance
+      tags:
+      - Balance
+  /balance/mutation:
+    get:
+      consumes:
+      - application/json
+      description: Get Mutation Balance
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - JWT: []
+      summary: Get Mutation Balance
+      tags:
+      - Balance
+  /balance/top-up:
+    post:
+      consumes:
+      - application/json
+      description: Top Up Balance
+      parameters:
+      - description: Top Up Data
+        in: body
+        name: topUp
+        required: true
+        schema:
+          $ref: '#/definitions/models.TopUpRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - JWT: []
+      summary: Top Up Balance
+      tags:
+      - Balance
+  /balance/transfer:
+    post:
+      consumes:
+      - application/json
+      description: Transfer Balance
+      parameters:
+      - description: Transfer Balance
+        in: body
+        name: transfer
+        required: true
+        schema:
+          $ref: '#/definitions/models.TransferBalance'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - JWT: []
+      summary: Transfer Balance
+      tags:
+      - Balance
+  /bank/account:
+    post:
+      consumes:
+      - application/json
+      description: Create new Account Bank
+      parameters:
+      - description: Account Bank
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateAccountBankRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - JWT: []
+      summary: Create new Account Bank
+      tags:
+      - Bank
+  /bank/deposit:
+    put:
+      consumes:
+      - application/json
+      description: Add Deposit
+      parameters:
+      - description: Add Deposit
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.AddDepositRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - JWT: []
+      summary: Add Deposit
+      tags:
+      - Bank
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Login user
+      parameters:
+      - description: User Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Login user
+      tags:
+      - Users
+  /users/profile:
+    get:
+      consumes:
+      - application/json
+      description: Get Profile Users
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - JWT: []
+      summary: Get Profile Users
+      tags:
+      - Users
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      description: Create new user
+      parameters:
+      - description: User Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.RegisterRequest'
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Create new user
+      tags:
+      - Users
+  /welcome:
+    get:
+      description: Welcome
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            type: object
+      summary: Welcome
+      tags:
+      - Welcome
+securityDefinitions:
+  JWT:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
