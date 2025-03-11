@@ -7,6 +7,7 @@ import (
 	"github.com/Fachrulmustofa20/bank-example.git/service/utils"
 	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 )
 
 // Register ... Create User
@@ -21,6 +22,7 @@ import (
 func (handler Handler) Register(ctx *gin.Context) {
 	var registerReq models.RegisterRequest
 	if err := ctx.ShouldBindJSON(&registerReq); err != nil {
+		log.Error("error binding json: ", err)
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
 			"message": "Please check the form and try again.",
 			"error":   err.Error(),
@@ -30,6 +32,7 @@ func (handler Handler) Register(ctx *gin.Context) {
 
 	valid, err := govalidator.ValidateStruct(registerReq)
 	if err != nil || !valid {
+		log.Warn("error validate struct: ", err)
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
 			"message": "A validation error occurred. Please check the form and try again.",
 			"error":   err.Error(),
@@ -39,6 +42,7 @@ func (handler Handler) Register(ctx *gin.Context) {
 
 	err = handler.userUsecase.Register(registerReq)
 	if err != nil {
+		log.Error("error register user: ", err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"message": "internal server error",
 			"error":   err.Error(),
@@ -63,6 +67,7 @@ func (handler Handler) Register(ctx *gin.Context) {
 func (handler Handler) Login(ctx *gin.Context) {
 	var loginReq models.LoginRequest
 	if err := ctx.ShouldBindJSON(&loginReq); err != nil {
+		log.Error("error binding json: ", err)
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
 			"message": "Please check the form and try again.",
 			"error":   err.Error(),
@@ -72,6 +77,7 @@ func (handler Handler) Login(ctx *gin.Context) {
 
 	valid, err := govalidator.ValidateStruct(loginReq)
 	if err != nil || !valid {
+		log.Warn("error validate struct: ", err)
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
 			"message": "A validation error occurred. Please check the form and try again.",
 			"error":   err.Error(),
@@ -82,6 +88,7 @@ func (handler Handler) Login(ctx *gin.Context) {
 	password := loginReq.Password
 	token, err := handler.userUsecase.Login(loginReq.Email, password)
 	if err != nil {
+		log.Error("error login user: ", err)
 		ctx.JSON(http.StatusUnauthorized, gin.H{
 			"message": "Unauthorized",
 			"error":   err.Error(),
@@ -108,6 +115,7 @@ func (handler Handler) Profile(ctx *gin.Context) {
 	userId := utils.GetUserIdJWT(ctx)
 	users, err := handler.userUsecase.Profile(userId)
 	if err != nil {
+		log.Error("error get profile user: ", err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"message": "internal server error",
 			"error":   err.Error(),

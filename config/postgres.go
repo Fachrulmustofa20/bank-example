@@ -2,16 +2,16 @@ package config
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"time"
 
 	"github.com/Fachrulmustofa20/bank-example.git/models"
+	log "github.com/sirupsen/logrus"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func (cfg *Config) InitPostgres() error {
+func (cfg *Config) initPostgres() error {
 	var (
 		DBHost    = os.Getenv("DB_HOST")
 		DBUser    = os.Getenv("DB_USER")
@@ -25,12 +25,12 @@ func (cfg *Config) InitPostgres() error {
 	dsn := config
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatalf("failed connect to database, error: %+v", err)
+		log.Fatal("failed connect to database, error: ", err)
 	}
 
 	sqlDB, err := db.DB()
 	if err != nil {
-		log.Fatalf("[ERR]: error while connect to db: %+v", err)
+		log.Fatal("error while connect to db: ", err)
 	}
 	sqlDB.SetMaxIdleConns(10)
 	sqlDB.SetMaxOpenConns(100)
@@ -38,13 +38,13 @@ func (cfg *Config) InitPostgres() error {
 
 	cfg.db = db
 
-	fmt.Println("Success connect to database")
+	log.Info("Success connect to database")
 	if err := db.AutoMigrate(&models.Users{},
 		&models.Balance{},
 		&models.BalanceHistory{},
 		&models.Bank{},
 		&models.BankBalanceHistory{}); err != nil {
-		log.Fatalln(err)
+		log.Fatal(err)
 	}
 	return nil
 }

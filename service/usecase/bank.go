@@ -3,6 +3,8 @@ package usecase
 import (
 	"fmt"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/Fachrulmustofa20/bank-example.git/constants"
 	"github.com/Fachrulmustofa20/bank-example.git/models"
 	"github.com/Fachrulmustofa20/bank-example.git/service"
@@ -22,15 +24,16 @@ func NewBankUsecase(bankRepo service.BankRepository, userRepo service.UsersRepos
 }
 
 func (usecase bankUsecase) CreateAccountBank(bank models.Bank) (err error) {
-
 	bankId, err := usecase.bankRepo.CreateAccountBank(bank)
 	if err != nil {
+		log.Error("error create account bank: ", err)
 		err = fmt.Errorf("%+v", err)
 		return err
 	}
 
 	user, err := usecase.userRepo.GetUserById(bank.UserId)
 	if err != nil {
+		log.Error("error get user by id: ", err)
 		err = fmt.Errorf("%+v", err)
 		return err
 	}
@@ -50,6 +53,7 @@ func (usecase bankUsecase) CreateAccountBank(bank models.Bank) (err error) {
 	}
 	err = usecase.bankRepo.CreateHistoryInBank(historyBank)
 	if err != nil {
+		log.Error("error create history bank: ", err)
 		err = fmt.Errorf("%+v", err)
 		return err
 	}
@@ -60,6 +64,7 @@ func (usecase bankUsecase) CreateAccountBank(bank models.Bank) (err error) {
 func (usecase bankUsecase) GetBalanceBankByCode(code string) (balanceInBank models.Bank, err error) {
 	balanceInBank, err = usecase.bankRepo.GetBalanceBankByCode(code)
 	if err != nil {
+		log.Error("error get balance bank by code: ", err)
 		err = fmt.Errorf("%+v", err)
 		return balanceInBank, err
 	}
@@ -69,11 +74,13 @@ func (usecase bankUsecase) GetBalanceBankByCode(code string) (balanceInBank mode
 func (usecase bankUsecase) AddDeposit(bank models.Bank) (err error) {
 	currentBalance, err := usecase.bankRepo.GetBalanceBankByCode(bank.Code)
 	if err != nil {
+		log.Error("error get balance bank by code: ", err)
 		err = fmt.Errorf("%+v", err)
 		return err
 	}
 
 	if currentBalance.Code != bank.Code {
+		log.Info("code account bank not same")
 		return constants.ErrCodeBank
 	}
 
@@ -86,6 +93,7 @@ func (usecase bankUsecase) AddDeposit(bank models.Bank) (err error) {
 	}
 	err = usecase.bankRepo.UpdateBalanceBankByUserId(bankUpdate)
 	if err != nil {
+		log.Error("error update balance bank by user id: ", err)
 		err = fmt.Errorf("%+v", err)
 		return err
 	}
@@ -96,6 +104,7 @@ func (usecase bankUsecase) AddDeposit(bank models.Bank) (err error) {
 	// get user
 	user, err := usecase.userRepo.GetUserById(bank.UserId)
 	if err != nil {
+		log.Error("error get user by id: ", err)
 		err = fmt.Errorf("%+v", err)
 		return err
 	}
@@ -114,6 +123,7 @@ func (usecase bankUsecase) AddDeposit(bank models.Bank) (err error) {
 	}
 	err = usecase.bankRepo.CreateHistoryInBank(bankHistory)
 	if err != nil {
+		log.Error("error create history bank: ", err)
 		err = fmt.Errorf("%+v", err)
 		return err
 	}

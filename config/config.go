@@ -2,13 +2,13 @@ package config
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/Fachrulmustofa20/bank-example.git/handler"
 	"github.com/Fachrulmustofa20/bank-example.git/service/repository/postgres"
 	"github.com/Fachrulmustofa20/bank-example.git/service/usecase"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
 
@@ -18,12 +18,13 @@ type Config struct {
 
 func Init() Config {
 	var cfg Config
-	err := cfg.InitPostgres()
+	err := cfg.initPostgres()
 	if err != nil {
 		log.Panic()
 	}
 
-	fmt.Println("Server is running ..")
+	initLogger()
+	log.Info("Server is running ..")
 
 	return cfg
 }
@@ -45,7 +46,7 @@ func (cfg *Config) Start() error {
 
 	err := r.Run(appPort)
 	if err != nil {
-		fmt.Printf("[ERR] Start service %+v", err)
+		log.Error("[ERR] Start service ", err)
 	}
 	return nil
 }

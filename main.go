@@ -1,11 +1,10 @@
 package main
 
 import (
-	"log"
-
 	"github.com/Fachrulmustofa20/bank-example.git/config"
 
 	"github.com/joho/godotenv"
+	log "github.com/sirupsen/logrus"
 )
 
 // @title           Document API Bank

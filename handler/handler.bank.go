@@ -3,6 +3,8 @@ package handler
 import (
 	"net/http"
 
+	log "github.com/sirupsen/logrus"
+
 	"github.com/Fachrulmustofa20/bank-example.git/models"
 	"github.com/Fachrulmustofa20/bank-example.git/service/utils"
 	"github.com/asaskevich/govalidator"
@@ -22,6 +24,7 @@ import (
 func (handler Handler) CreateAccountBank(ctx *gin.Context) {
 	var request models.CreateAccountBankRequest
 	if err := ctx.ShouldBindJSON(&request); err != nil {
+		log.Error("error binding json: ", err)
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
 			"message": "Please check the form and try again.",
 			"error":   err.Error(),
@@ -31,6 +34,7 @@ func (handler Handler) CreateAccountBank(ctx *gin.Context) {
 
 	valid, err := govalidator.ValidateStruct(request)
 	if err != nil || !valid {
+		log.Warn("error validate struct: ", err)
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
 			"message": "A validation error occurred. Please check the form and try again.",
 			"error":   err.Error(),
@@ -55,6 +59,7 @@ func (handler Handler) CreateAccountBank(ctx *gin.Context) {
 		Enable:         true,
 	})
 	if err != nil {
+		log.Error("error create account bank: ", err)
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message": "Status Bad Request",
 			"error":   err.Error(),
@@ -86,6 +91,7 @@ func (handler Handler) AddDeposit(ctx *gin.Context) {
 	var request models.AddDepositRequest
 	userId := utils.GetUserIdJWT(ctx)
 	if err := ctx.ShouldBindJSON(&request); err != nil {
+		log.Error("error binding json: ", err)
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
 			"message": "Please check the form and try again.",
 			"error":   err.Error(),
@@ -117,6 +123,7 @@ func (handler Handler) AddDeposit(ctx *gin.Context) {
 		UserId:         userId,
 	})
 	if err != nil {
+		log.Error("error add deposit: ", err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"message": "Internal Server Error",
 			"error":   err.Error(),
