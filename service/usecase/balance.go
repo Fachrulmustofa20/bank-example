@@ -22,7 +22,7 @@ func NewBalanceUsecase(
 	userRepo service.UsersRepository,
 	balanceRepo service.BalanceRepository,
 	bankRepo service.BankRepository,
-) service.BalanceUsecase {
+) *balanceUsecase {
 	return &balanceUsecase{
 		userRepo:    userRepo,
 		balanceRepo: balanceRepo,
@@ -30,7 +30,7 @@ func NewBalanceUsecase(
 	}
 }
 
-func (usecase balanceUsecase) GetBalance(userId uint) (balance models.Balance, err error) {
+func (usecase *balanceUsecase) GetBalance(userId uint) (balance models.Balance, err error) {
 	balance, err = usecase.balanceRepo.GetBalance(userId)
 	if err != nil {
 		err = fmt.Errorf("%+v", err)
@@ -39,7 +39,7 @@ func (usecase balanceUsecase) GetBalance(userId uint) (balance models.Balance, e
 	return balance, nil
 }
 
-func (usecase balanceUsecase) TopUpBalance(topUp models.TopUpRequest, userId uint) (err error) {
+func (usecase *balanceUsecase) TopUpBalance(topUp models.TopUpRequest, userId uint) (err error) {
 	balanceInBank, err := usecase.bankRepo.GetBalanceBankByUserId(userId)
 	if err != nil {
 		log.Error("error get balance bank by user id: ", err)
@@ -144,7 +144,7 @@ func (usecase balanceUsecase) TopUpBalance(topUp models.TopUpRequest, userId uin
 	return nil
 }
 
-func (usecase balanceUsecase) TransferBalance(transfer models.TransferBalance, userId uint) (err error) {
+func (usecase *balanceUsecase) TransferBalance(transfer models.TransferBalance, userId uint) (err error) {
 	// validate email user receipent
 	tx := usecase.userRepo.EmailIsExist(transfer.EmailRecipient)
 	if tx.RowsAffected < 1 {
@@ -260,7 +260,7 @@ func (usecase balanceUsecase) TransferBalance(transfer models.TransferBalance, u
 	return nil
 }
 
-func (usecase balanceUsecase) GetMutationBalance(userId uint) (history []models.BalanceHistory, err error) {
+func (usecase *balanceUsecase) GetMutationBalance(userId uint) (history []models.BalanceHistory, err error) {
 	balanceHistory, err := usecase.balanceRepo.GetBalanceHistoryByBalanceID(userId)
 	if err != nil {
 		log.Error("error get balance history by user id: ", err)

@@ -19,14 +19,14 @@ type bankUsecase struct {
 func NewBankUsecase(
 	bankRepo service.BankRepository,
 	userRepo service.UsersRepository,
-) service.BankUsecase {
+) *bankUsecase {
 	return &bankUsecase{
 		bankRepo: bankRepo,
 		userRepo: userRepo,
 	}
 }
 
-func (usecase bankUsecase) CreateAccountBank(bank models.Bank) (err error) {
+func (usecase *bankUsecase) CreateAccountBank(bank models.Bank) (err error) {
 	bankId, err := usecase.bankRepo.CreateAccountBank(bank)
 	if err != nil {
 		log.Error("error create account bank: ", err)
@@ -64,7 +64,7 @@ func (usecase bankUsecase) CreateAccountBank(bank models.Bank) (err error) {
 	return nil
 }
 
-func (usecase bankUsecase) GetBalanceBankByCode(code string) (balanceInBank models.Bank, err error) {
+func (usecase *bankUsecase) GetBalanceBankByCode(code string) (balanceInBank models.Bank, err error) {
 	balanceInBank, err = usecase.bankRepo.GetBalanceBankByCode(code)
 	if err != nil {
 		log.Error("error get balance bank by code: ", err)
@@ -74,7 +74,7 @@ func (usecase bankUsecase) GetBalanceBankByCode(code string) (balanceInBank mode
 	return balanceInBank, err
 }
 
-func (usecase bankUsecase) AddDeposit(bank models.Bank) (err error) {
+func (usecase *bankUsecase) AddDeposit(bank models.Bank) (err error) {
 	currentBalance, err := usecase.bankRepo.GetBalanceBankByCode(bank.Code)
 	if err != nil {
 		log.Error("error get balance bank by code: ", err)

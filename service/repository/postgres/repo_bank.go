@@ -12,11 +12,11 @@ type bankRepository struct {
 	db *gorm.DB
 }
 
-func NewBankRepository(db *gorm.DB) bankRepository {
-	return bankRepository{db: db}
+func NewBankRepository(db *gorm.DB) *bankRepository {
+	return &bankRepository{db: db}
 }
 
-func (r bankRepository) CreateAccountBank(bank models.Bank) (bankId uint, err error) {
+func (r *bankRepository) CreateAccountBank(bank models.Bank) (bankId uint, err error) {
 	err = r.db.Create(&bank).Error
 	if err != nil {
 		log.Error("error while create account bank: ", err)
@@ -26,7 +26,7 @@ func (r bankRepository) CreateAccountBank(bank models.Bank) (bankId uint, err er
 	return bank.ID, nil
 }
 
-func (r bankRepository) GetBalanceBankByCode(code string) (balanceInBank models.Bank, err error) {
+func (r *bankRepository) GetBalanceBankByCode(code string) (balanceInBank models.Bank, err error) {
 	err = r.db.Debug().Where("code = ?", code).Take(&balanceInBank).Error
 	if err != nil {
 		log.Error("error while balance bank by code: ", err)
@@ -35,7 +35,7 @@ func (r bankRepository) GetBalanceBankByCode(code string) (balanceInBank models.
 	return balanceInBank, nil
 }
 
-func (r bankRepository) GetBalanceBankByUserId(userId uint) (balanceInBank models.Bank, err error) {
+func (r *bankRepository) GetBalanceBankByUserId(userId uint) (balanceInBank models.Bank, err error) {
 	err = r.db.Debug().Where("user_id = ?", userId).Take(&balanceInBank).Error
 	if err != nil {
 		log.Error("error while balance bank by userId: ", err)
@@ -44,7 +44,7 @@ func (r bankRepository) GetBalanceBankByUserId(userId uint) (balanceInBank model
 	return balanceInBank, nil
 }
 
-func (r bankRepository) UpdateBalanceByCode(bank models.Bank) (err error) {
+func (r *bankRepository) UpdateBalanceByCode(bank models.Bank) (err error) {
 	err = r.db.Model(&bank).Where("code = ?", bank.Code).Update("balance", bank.Balance).Error
 	if err != nil {
 		log.Error("error while update bank balance by code: ", err)
@@ -53,7 +53,7 @@ func (r bankRepository) UpdateBalanceByCode(bank models.Bank) (err error) {
 	return err
 }
 
-func (r bankRepository) CreateHistoryInBank(bankHistory models.BankBalanceHistory) (err error) {
+func (r *bankRepository) CreateHistoryInBank(bankHistory models.BankBalanceHistory) (err error) {
 	err = r.db.Create(&bankHistory).Error
 	if err != nil {
 		log.Error("error while create history in bank: ", err)
@@ -63,7 +63,7 @@ func (r bankRepository) CreateHistoryInBank(bankHistory models.BankBalanceHistor
 	return nil
 }
 
-func (r bankRepository) UpdateBalanceBankByUserId(bank models.Bank) (err error) {
+func (r *bankRepository) UpdateBalanceBankByUserId(bank models.Bank) (err error) {
 	err = r.db.Debug().Model(bank).Where("user_id = ?", bank.UserId).Updates(models.Bank{
 		Balance:        bank.Balance,
 		BalanceAchieve: bank.BalanceAchieve,

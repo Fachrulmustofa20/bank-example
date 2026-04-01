@@ -19,14 +19,14 @@ type usersUsecase struct {
 func NewUsersUsecase(
 	userRepo service.UsersRepository,
 	balanceRepo service.BalanceRepository,
-) service.UsersUsecase {
+) *usersUsecase {
 	return &usersUsecase{
 		userRepo:    userRepo,
 		balanceRepo: balanceRepo,
 	}
 }
 
-func (usecase usersUsecase) Register(registerReq models.RegisterRequest) error {
+func (usecase *usersUsecase) Register(registerReq models.RegisterRequest) error {
 	// hash password
 	password := utils.HashPass(registerReq.Password)
 	userId, err := usecase.userRepo.CreateUser(models.Users{
@@ -56,7 +56,7 @@ func (usecase usersUsecase) Register(registerReq models.RegisterRequest) error {
 	return nil
 }
 
-func (usecase usersUsecase) Login(email string, password string) (token string, err error) {
+func (usecase *usersUsecase) Login(email string, password string) (token string, err error) {
 	users, err := usecase.userRepo.GetUserByEmail(email)
 	if err != nil {
 		log.Error("error get user by email: ", err)
@@ -78,7 +78,7 @@ func (usecase usersUsecase) Login(email string, password string) (token string, 
 	return token, nil
 }
 
-func (usecase usersUsecase) Profile(id uint) (response models.Users, err error) {
+func (usecase *usersUsecase) Profile(id uint) (response models.Users, err error) {
 	users, err := usecase.userRepo.GetUserById(id)
 	users.Password = ""
 	if err != nil {
