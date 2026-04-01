@@ -2,13 +2,14 @@ package config
 
 import (
 	"os"
+	"strings"
 
 	log "github.com/sirupsen/logrus"
 )
 
 func initLogger() {
 	// Log as JSON instead of the default ASCII formatter.
-	if os.Getenv("ENV") == "production" {
+	if strings.ToLower(os.Getenv("ENV")) == "production" {
 		log.SetFormatter(&log.JSONFormatter{})
 		log.SetLevel(log.ErrorLevel)
 	} else {
