@@ -18,7 +18,11 @@ type balanceUsecase struct {
 	bankRepo    service.BankRepository
 }
 
-func NewBalanceUsecase(userRepo service.UsersRepository, balanceRepo service.BalanceRepository, bankRepo service.BankRepository) service.BalanceUsecase {
+func NewBalanceUsecase(
+	userRepo service.UsersRepository,
+	balanceRepo service.BalanceRepository,
+	bankRepo service.BankRepository,
+) service.BalanceUsecase {
 	return &balanceUsecase{
 		userRepo:    userRepo,
 		balanceRepo: balanceRepo,

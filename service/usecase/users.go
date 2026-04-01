@@ -16,7 +16,10 @@ type usersUsecase struct {
 	balanceRepo service.BalanceRepository
 }
 
-func NewUsersUsecase(userRepo service.UsersRepository, balanceRepo service.BalanceRepository) service.UsersUsecase {
+func NewUsersUsecase(
+	userRepo service.UsersRepository,
+	balanceRepo service.BalanceRepository,
+) service.UsersUsecase {
 	return &usersUsecase{
 		userRepo:    userRepo,
 		balanceRepo: balanceRepo,
