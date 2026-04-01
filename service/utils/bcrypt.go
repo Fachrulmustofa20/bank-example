@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"log"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -8,6 +10,7 @@ func HashPass(pass string) string {
 	salt := 8
 	password := []byte(pass)
 	hash, _ := bcrypt.GenerateFromPassword(password, salt)
+	log.Println("Hashed: ", string(hash))
 	return string(hash)
 }
 
